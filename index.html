@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read CSV File</title>
+</head>
+<body>
+
+<h1>Player Roster</h1>
+
+<!-- Button to load the CSV -->
+<button id="loadCsv">Load CSV</button>
+
+<table id="playerTable" border="1">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Games</th>
+      <th>Refreshments</th>
+      <th>Last Refreshments</th>
+      <th>Ground Setup</th>
+      <th>Last Setup</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  // Function to parse and display CSV data
+  function displayCSVData(data) {
+    const rows = data.split('\n'); // Split CSV into rows
+    const tableBody = document.querySelector('#playerTable tbody');
+    tableBody.innerHTML = ''; // Clear any existing data
+
+    // Process each row
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i].trim();
+      if (row) { // Ignore empty rows
+        const cols = row.split(','); // Split row into columns
+        const tr = document.createElement('tr'); // Create a table row
+
+        // Append columns to the table row
+        cols.forEach(col => {
+          const td = document.createElement('td');
+          td.textContent = col;
+          tr.appendChild(td);
+        });
+        tableBody.appendChild(tr); // Append the row to the table body
+      }
+    }
+  }
+
+  // Function to load the CSV file using fetch
+  function loadCSVFile() {
+    fetch('players.csv')  // Path to your CSV file
+      .then(response => response.text())  // Read it as text
+      .then(data => {
+        displayCSVData(data);  // Call the display function with CSV data
+      })
+      .catch(error => console.error('Error fetching the CSV file:', error));
+  }
+
+  // Load CSV when button is clicked
+  document.getElementById('loadCsv').addEventListener('click', loadCSVFile);
+</script>
+
+</body>
+</html>
