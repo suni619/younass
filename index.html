@@ -3,14 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Read CSV File</title>
+  <title>Player assignments</title>
 </head>
 <body>
 
 <h1>Player Roster</h1>
-
-<!-- Button to load the CSV -->
-<button id="loadCsv">Load CSV</button>
 
 <table id="playerTable" border="1">
   <thead>
@@ -61,8 +58,10 @@
       .catch(error => console.error('Error fetching the CSV file:', error));
   }
 
-  // Load CSV when button is clicked
-  document.getElementById('loadCsv').addEventListener('click', loadCSVFile);
+  // Load CSV when the page loads
+  window.onload = function() {
+    loadCSVFile();
+  };
 </script>
 
 </body>
