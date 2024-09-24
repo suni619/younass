@@ -23,41 +23,121 @@
   <tbody></tbody>
 </table>
 
+<div class="player-list">
+  <h2>Sorted Players</h2>
+  <ul id="sortedPlayersList"></ul>
+</div>
+
+<div class="selected-list">
+  <h2>Selected Players</h2>
+  <ul id="selectedPlayersList"></ul>
+</div>
 <script>
-  // Function to parse and display CSV data
-  function displayCSVData(data) {
-    const rows = data.split('\n'); // Split CSV into rows
-    const tableBody = document.querySelector('#playerTable tbody');
-    tableBody.innerHTML = ''; // Clear any existing data
+  // Data structure to store the CSV data
+  let playerData = [];
+  let selectedPlayers = [];
 
-    // Process each row
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i].trim();
-      if (row) { // Ignore empty rows
-        const cols = row.split(','); // Split row into columns
-        const tr = document.createElement('tr'); // Create a table row
-
-        // Append columns to the table row
-        cols.forEach(col => {
-          const td = document.createElement('td');
-          td.textContent = col;
-          tr.appendChild(td);
-        });
-        tableBody.appendChild(tr); // Append the row to the table body
-      }
-    }
-  }
-
-  // Function to load the CSV file using fetch
+  // Fetch CSV file and initiate parsing and displaying
   function loadCSVFile() {
     fetch('players.csv')  // Path to your CSV file
-      .then(response => response.text())  // Read it as text
+      .then(response => response.text())
       .then(data => {
-        displayCSVData(data);  // Call the display function with CSV data
+        playerData = parseCSVData(data);  // Parse the CSV data and store it
+        displayTable(playerData);         // Display the data in a table
+        const sortedPlayers = getSortedPlayers(playerData);  // Extract and sort players
+        displaySortedPlayers(sortedPlayers);
       })
       .catch(error => console.error('Error fetching the CSV file:', error));
   }
 
+  // Parse the CSV data and return an array of player objects
+  function parseCSVData(data) {
+    const rows = data.split('\n');
+    const parsedData = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i].trim();
+      if (row) { // Ignore empty rows
+        const cols = row.split(',');
+        const player = {
+          player: cols[0],
+          games: cols[1],
+          ref: cols[2],
+          lastRef: cols[3],
+          setup: cols[4],
+          lastSetup: cols[5]
+        };
+        parsedData.push(player);
+      }
+    }
+    return parsedData;  // Return the parsed data array
+  }
+
+  // Extract the player names from the data and return a sorted array
+  function getSortedPlayers(data) {
+    const playerNames = data.map(player => player.player);  // Extract player field
+    return playerNames.sort();  // Sort the player names alphabetically
+  }
+  
+  // Display the data in the table
+  function displayTable(data) {
+    const tableBody = document.querySelector('#playerTable tbody');
+    tableBody.innerHTML = ''; // Clear any existing data
+
+    // Create a table row for each player object
+    data.forEach(player => {
+      const tr = document.createElement('tr');
+      Object.values(player).forEach(value => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
+    });
+  }
+
+  // Display the sorted player list with buttons
+  function displaySortedPlayers(sortedPlayers) {
+    const sortedList = document.querySelector('#sortedPlayersList');
+    sortedList.innerHTML = '';  // Clear existing list
+
+    sortedPlayers.forEach(player => {
+      const li = document.createElement('li');
+      li.textContent = player;
+
+      // Create an "Add" button for each player
+      const addButton = document.createElement('button');
+      addButton.textContent = 'Add';
+      addButton.onclick = function() {
+        addPlayerToSelection(player);  // Add player to the selected list
+      };
+
+      li.appendChild(addButton);
+      sortedList.appendChild(li);
+    });
+  }
+
+  // Add player to selectedPlayers array and update display
+  function addPlayerToSelection(player) {
+    // Check if player is already selected
+    if (!selectedPlayers.includes(player)) {
+      selectedPlayers.push(player);  // Add to selectedPlayers array
+      displaySelectedPlayers();  // Update the displayed selected list
+    }
+  }
+
+  // Display the selected players
+  function displaySelectedPlayers() {
+    const selectedList = document.querySelector('#selectedPlayersList');
+    selectedList.innerHTML = '';  // Clear existing list
+
+    selectedPlayers.forEach(player => {
+      const li = document.createElement('li');
+      li.textContent = player;
+      selectedList.appendChild(li);
+    });
+  }
+  
   // Load CSV when the page loads
   window.onload = function() {
     loadCSVFile();
