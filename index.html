@@ -149,8 +149,8 @@
       if (a.ratioGamesToRef < b.ratioGamesToRef) return 1;
 
       // break tie using last assignment
-      if (new Date(a.lastRef) > new Date(b.lastRef)) return -1;
-      if (new Date(a.lastRef) < new Date(b.lastRef)) return 1;
+      if (new Date(a.lastRef) < new Date(b.lastRef)) return -1;
+      if (new Date(a.lastRef) > new Date(b.lastRef)) return 1;
 
       // no sorting needed
       return 0;
@@ -167,8 +167,8 @@
       if (a.ratioGamesToSetup < b.ratioGamesToSetup) return 1;
 
       // break tie using last assignment
-      if (new Date(a.lastSetup) > new Date(b.lastSetup)) return -1;
-      if (new Date(a.lastSetup) < new Date(b.lastSetup)) return 1;
+      if (new Date(a.lastSetup) < new Date(b.lastSetup)) return -1;
+      if (new Date(a.lastSetup) > new Date(b.lastSetup)) return 1;
 
       // no sorting needed
       return 0;
