@@ -31,7 +31,7 @@
   <ol id="selectedPlayersList"></ol>
 </div>
 
-<button onclick="assignDuties()">Assign Duties</button>
+<button id="assignDutiesButton">Assign Duties</button>
   
 <div class="ref-assign">
   <span>Refreshments: </span>
@@ -157,7 +157,7 @@
     });
     console.log(selectedPlayers);
     const refreshmentAssignedPlayer = selectedPlayers.shift();
-    const refreshmentAssignedPlayerTag = document.querySelector('refreshmentAssignedPlayer');
+    const refreshmentAssignedPlayerTag = document.querySelector('#refreshmentAssignedPlayer');
     refreshmentAssignedPlayerTag.textContent = refreshmentAssignedPlayer.name;
 
     // assign ground setup
@@ -174,7 +174,7 @@
       return 0;
     });
     
-    const setupAssignedPlayerList = document.querySelector('setupAssignedPlayer');
+    const setupAssignedPlayerList = document.querySelector('#setupAssignedPlayer');
     setupAssignedPlayerTag.innerHTML = '';
     for (const i = 0; i < 3; i++) {
       const setupAssignedPlayer = selectedPlayers.shift();
@@ -184,6 +184,9 @@
     }
     
   }
+
+  // assign duties
+  document.querySelector('#assignDutiesButton').addEventListener('click', assignDuties);
   
   // Load CSV when the page loads
   window.onload = function() {
