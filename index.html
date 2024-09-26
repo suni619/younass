@@ -178,7 +178,7 @@
     
     const setupAssignedPlayerList = document.querySelector('#setupAssignedPlayers');
     setupAssignedPlayerList.innerHTML = '';
-    for (const i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       const setupAssignedPlayer = selectedPlayers.shift();
       const li = document.createElement('li');
       li.textContent = setupAssignedPlayer.name;
