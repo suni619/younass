@@ -78,8 +78,8 @@
           lastRef: cols[3],
           setup: setup,
           lastSetup: cols[5],
-          ratioGamesToRef: ref > 0 ? games / ref : 0,
-          ratioGamesToSetup: setup > 0 ? games / setup : 0
+          ratioGamesToRef: ref > 0 ? games / ref : 100,
+          ratioGamesToSetup: setup > 0 ? games / setup : 100
         };
         parsedData.push(player);
       }
@@ -156,7 +156,9 @@
       return 0;
     });
     console.log(selectedPlayers);
+    
     const refreshmentAssignedPlayer = selectedPlayers.shift();
+    console.log("Ref", setupAssignedPlayerList);
     const refreshmentAssignedPlayerTag = document.querySelector('#refreshmentAssignedPlayer');
     refreshmentAssignedPlayerTag.textContent = refreshmentAssignedPlayer.name;
 
@@ -175,12 +177,13 @@
     });
     
     const setupAssignedPlayerList = document.querySelector('#setupAssignedPlayer');
-    setupAssignedPlayerTag.innerHTML = '';
+    setupAssignedPlayerList.innerHTML = '';
     for (const i = 0; i < 3; i++) {
       const setupAssignedPlayer = selectedPlayers.shift();
       const li = document.createElement('li');
       li.textContent = setupAssignedPlayer.name;
       setupAssignedPlayerList.appendChild(li);
+      console.log("Setup", setupAssignedPlayer);
     }
     
   }
