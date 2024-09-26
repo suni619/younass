@@ -18,15 +18,12 @@
       <th>Last Refreshments</th>
       <th>Ground Setup</th>
       <th>Last Setup</th>
+      <th>Games to refreshments ratio</th>
+      <th>Games to setup ratio</th>
     </tr>
   </thead>
   <tbody></tbody>
 </table>
-
-<div class="player-list">
-  <h2>Sorted Players</h2>
-  <ul id="sortedPlayersList"></ul>
-</div>
 
 <div class="selected-list">
   <h2>Selected Players</h2>
@@ -43,9 +40,7 @@
       .then(response => response.text())
       .then(data => {
         playerData = parseCSVData(data);  // Parse the CSV data and store it
-        displayTable(playerData);         // Display the data in a table
-        const sortedPlayers = getSortedPlayers(playerData);  // Extract and sort players
-        displaySortedPlayers(sortedPlayers);
+        displayRoster(playerData);         // Display the data in a table
       })
       .catch(error => console.error('Error fetching the CSV file:', error));
   }
@@ -61,11 +56,13 @@
         const cols = row.split(',');
         const player = {
           player: cols[0],
-          games: cols[1],
-          ref: cols[2],
-          lastRef: cols[3],
-          setup: cols[4],
-          lastSetup: cols[5]
+          games: parseInt(cols[1]),
+          ref: parseInt(cols[2]),
+          lastRef: new Date(cols[3]),
+          setup: parseInt(cols[4]),
+          lastSetup: new Date(cols[5]),
+          ratioGamesToRef: ref > 0 ? games / ref : 0,
+          ratioGamesToSetup: setup > 0 ? games / setup : 0
         };
         parsedData.push(player);
       }
@@ -80,40 +77,29 @@
   }
   
   // Display the data in the table
-  function displayTable(data) {
+  function displayRoster(data) {
     const tableBody = document.querySelector('#playerTable tbody');
     tableBody.innerHTML = ''; // Clear any existing data
 
     // Create a table row for each player object
     data.forEach(player => {
       const tr = document.createElement('tr');
-      Object.values(player).forEach(value => {
-        const td = document.createElement('td');
-        td.textContent = value;
-        tr.appendChild(td);
-      });
-      tableBody.appendChild(tr);
-    });
-  }
-
-  // Display the sorted player list with buttons
-  function displaySortedPlayers(sortedPlayers) {
-    const sortedList = document.querySelector('#sortedPlayersList');
-    sortedList.innerHTML = '';  // Clear existing list
-
-    sortedPlayers.forEach(player => {
-      const li = document.createElement('li');
-      li.textContent = player;
-
+      const td = document.createElement('td');
       // Create an "Add" button for each player
       const addButton = document.createElement('button');
       addButton.textContent = 'Add';
       addButton.onclick = function() {
         addPlayerToSelection(player);  // Add player to the selected list
       };
-
-      li.appendChild(addButton);
-      sortedList.appendChild(li);
+      td.appendChild(addButton);
+      tr.appendChild(td);
+      
+      Object.values(player).forEach(value => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
     });
   }
 
