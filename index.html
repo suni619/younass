@@ -12,7 +12,8 @@
 <table id="playerTable" border="1">
   <thead>
     <tr>
-      <th>Player</th>
+      <th></th> <!-- for add button -->
+      <th>Name</th>
       <th>Games</th>
       <th>Refreshments</th>
       <th>Last Refreshments</th>
@@ -27,7 +28,19 @@
 
 <div class="selected-list">
   <h2>Selected Players</h2>
-  <ul id="selectedPlayersList"></ul>
+  <ol id="selectedPlayersList"></ol>
+</div>
+
+<button onclick="assignDuties()">Assign Duties</button>
+  
+<div class="ref-assign">
+  <span>Refreshments: </span>
+  <span id="refreshmentAssignedPlayer"></span>
+</div>
+
+<div class="setup-assign">
+  <span>Ground setup: </span>
+  <ul id="setupAssignedPlayers"></ul>
 </div>
 <script>
   // Data structure to store the CSV data
@@ -59,12 +72,12 @@
         const setup = parseInt(cols[4])
         
         const player = {
-          player: cols[0],
+          name: cols[0],
           games: games,
           ref: ref,
-          lastRef: new Date(cols[3]),
+          lastRef: cols[3],
           setup: setup,
-          lastSetup: new Date(cols[5]),
+          lastSetup: cols[5],
           ratioGamesToRef: ref > 0 ? games / ref : 0,
           ratioGamesToSetup: setup > 0 ? games / setup : 0
         };
@@ -123,9 +136,53 @@
 
     selectedPlayers.forEach(player => {
       const li = document.createElement('li');
-      li.textContent = player;
+      li.textContent = player.name;
       selectedList.appendChild(li);
     });
+  }
+
+  function assignDuties() {
+    // assign refreshments
+    selectedPlayers.sort((a, b) => {
+      // sort by ratio in descending order
+      if (a.ratioGamesToRef > b.ratioGamesToRef) return -1;
+      if (a.ratioGamesToRef < b.ratioGamesToRef) return 1;
+
+      // break tie using last assignment
+      if (new Date(a.lastRef) > new Date(b.lastRef)) return -1;
+      if (new Date(a.lastRef) < new Date(b.lastRef)) return 1;
+
+      // no sorting needed
+      return 0;
+    });
+    console.log(selectedPlayers);
+    const refreshmentAssignedPlayer = selectedPlayers.shift();
+    const refreshmentAssignedPlayerTag = document.querySelector('refreshmentAssignedPlayer');
+    refreshmentAssignedPlayerTag.textContent = refreshmentAssignedPlayer.name;
+
+    // assign ground setup
+    selectedPlayers.sort((a, b) => {
+      // sort by ratio in descending order
+      if (a.ratioGamesToSetup > b.ratioGamesToSetup) return -1;
+      if (a.ratioGamesToSetup < b.ratioGamesToSetup) return 1;
+
+      // break tie using last assignment
+      if (new Date(a.lastSetup) > new Date(b.lastSetup)) return -1;
+      if (new Date(a.lastSetup) < new Date(b.lastSetup)) return 1;
+
+      // no sorting needed
+      return 0;
+    });
+    
+    const setupAssignedPlayerList = document.querySelector('setupAssignedPlayer');
+    setupAssignedPlayerTag.innerHTML = '';
+    for (const i = 0; i < 3; i++) {
+      const setupAssignedPlayer = selectedPlayers.shift();
+      const li = document.createElement('li');
+      li.textContent = setupAssignedPlayer.name;
+      setupAssignedPlayerList.appendChild(li);
+    }
+    
   }
   
   // Load CSV when the page loads
