@@ -54,12 +54,16 @@
       const row = rows[i].trim();
       if (row) { // Ignore empty rows
         const cols = row.split(',');
+        const games = parseInt(cols[1]);
+        const ref = parseInt(cols[2]);
+        const setup = parseInt(cols[4])
+        
         const player = {
           player: cols[0],
-          games: parseInt(cols[1]),
-          ref: parseInt(cols[2]),
+          games: games,
+          ref: ref,
           lastRef: new Date(cols[3]),
-          setup: parseInt(cols[4]),
+          setup: setup,
           lastSetup: new Date(cols[5]),
           ratioGamesToRef: ref > 0 ? games / ref : 0,
           ratioGamesToSetup: setup > 0 ? games / setup : 0
