@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Player assignments</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet"> <!-- bootswatch/lux theme -->
 </head>
 <body>
+<h1>Youngistan <small class="text-body-secondary">duties tracker</small></h1>
 
-<h1>Player Roster</h1>
-
+<h2>Player Roster</h2>
 <table id="playerTable" border="1">
   <thead>
     <tr>
@@ -26,22 +27,32 @@
   <tbody></tbody>
 </table>
 
-<div class="selected-list">
-  <h2>Selected Players</h2>
-  <ol id="selectedPlayersList"></ol>
+<div class="card border-primary mb-3" style="max-width: 20rem;">
+  <div class="card-body">
+    <h4 class="card-title">Playing XI</h4>
+    <p class="card-text">
+      <ol id="selectedPlayersList"></ol>
+    </p>
+  </div>
 </div>
-
-<button id="assignDutiesButton">Assign Duties</button>
+<button type="button" class="btn btn-primary" id="assignDutiesButton">Assign Duties</button>
   
-<div class="ref-assign">
-  <h3>Refreshments: </h3>
-  <p id="refreshmentAssignedPlayer"></p>
+<div class="card border-primary mb-3" style="max-width: 20rem; display:none" id="refreshmentsCard">
+  <div class="card-body">
+    <h4 class="card-title">Refreshments: </h4>
+    <p class="card-text" id="refreshmentAssignedPlayer"></p>
+  </div>
 </div>
 
-<div class="setup-assign">
-  <h3>Ground setup: </h3>
-  <ul id="setupAssignedPlayers"></ul>
+<div class="card border-primary mb-3" style="max-width: 20rem; display:none" id="setupCard">
+  <div class="card-body">
+    <h4 class="card-title">Ground setup: </h4>
+    <p class="card-text">
+      <ul id="setupAssignedPlayers"></ul>
+    </p>
+  </div>
 </div>
+
 <script>
   // Data structure to store the CSV data
   let playerData = [];
@@ -161,6 +172,7 @@
     console.log("Ref", refreshmentAssignedPlayer);
     const refreshmentAssignedPlayerTag = document.querySelector('#refreshmentAssignedPlayer');
     refreshmentAssignedPlayerTag.textContent = refreshmentAssignedPlayer.name;
+    document.querySelector('#refreshmentsCard').style.display = "block";
 
     // assign ground setup
     selectedPlayers.sort((a, b) => {
@@ -185,7 +197,7 @@
       setupAssignedPlayerList.appendChild(li);
       console.log("Setup", setupAssignedPlayer);
     }
-    
+    document.querySelector('#setupCard').style.display = "block";
   }
 
   // assign duties
