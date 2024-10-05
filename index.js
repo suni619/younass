@@ -156,6 +156,9 @@ function assignDuties() {
     console.log("Setup", setupAssignedPlayer);
   }
   document.querySelector('#setupCard').style.display = "block";
+
+  setupAssignedPlayerList.scrollIntoView({ behavior: 'smooth' });
+  setupAssignedPlayerList.focus();
 }
 
 // assign duties
